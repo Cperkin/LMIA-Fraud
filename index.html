@@ -1,79 +1,64 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LMIA Applications After 2023</title>
-  https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js
+  <title>2025 Q2 LMIA Applications</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
     th { background-color: #f2f2f2; }
+    .scrollable-table {
+      max-height: 600px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+    }
   </style>
 </head>
 <body>
-  <h1>LMIA Applications After 2023</h1>
-  <p>Data sourced from the Government of Canada Open Portal.</p>
+  <h1>2025 Q2 LMIA Applications (Sample)</h1>
+  <p>This table displays the first 500 rows of the <strong>tfwp_2025q2_pos_en.csv</strong> dataset.</p>
 
-<select id="datasetSelector">
-  <option value="">Select a dataset</option>
-  <option value="https://raw.githubusercontent.com/cperkin/LMIA-Fraud/main/tfwp_2025q2_pos_en.csv">
-    2025 Q2 LMIA Dataset
-  </option>
-</select>
-
-<div id="tableContainer"></div>
-
-https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js</script>
-<script>
-  document.getElementById('datasetSelector').addEventListener('change', function () {
-    const url = this.value;
-    if (!url) return;
-
-    fetch(url)
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok");
-        return response.text();
-      })
-      .then(csv => {
-        const parsed = Papa.parse(csv, { header: true });
-        const data = parsed.data;
-        const table = document.createElement('table');
-        const thead = document.createElement('thead');
-        const tbody = document.createElement('tbody');
-
-        // Create header row
-        const headerRow = document.createElement('tr');
-        Object.keys(data[0]).forEach(key => {
-          const th = document.createElement('th');
-          th.textContent = key;
-          headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-
-        // Create data rows
-        data.forEach(row => {
-          const tr = document.createElement('tr');
-          Object.values(row).forEach(value => {
-            const td = document.createElement('td');
-            td.textContent = value;
-            tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
-        });
-
-        table.appendChild(thead);
-        table.appendChild(tbody);
-        const container = document.getElementById('tableContainer');
-        container.innerHTML = '';
-        container.appendChild(table);
-      })
-      .catch(err => {
-        console.error('Error loading CSV:', err);
-        alert('Failed to load dataset. Please check the file URL and format.');
-      });
-  });
-</script>
+  <div class="scrollable-table">
+    <!-- Paste your HTML table here -->
+    <!-- Example placeholder -->
+    <table>
+      <thead>
+        <tr>
+          <th>Employer Name</th>
+          <th>City</th>
+          <th>Province</th>
+          <th>NAICS</th>
+          <th>NOC</th>
+          <th>Job Title</th>
+          <th>Positions</th>
+          <th>LMIA Approval Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ABC Construction Ltd.</td>
+          <td>Vancouver</td>
+          <td>BC</td>
+          <td>238910</td>
+          <td>7611</td>
+          <td>Construction Labourer</td>
+          <td>3</td>
+          <td>2025-06-15</td>
+        </tr>
+        <tr>
+          <td>XYZ Hospitality Inc.</td>
+          <td>Kelowna</td>
+          <td>BC</td>
+          <td>722511</td>
+          <td>6322</td>
+          <td>Cook</td>
+          <td>2</td>
+          <td>2025-06-10</td>
+        </tr>
+        <!-- Add more rows here -->
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>
