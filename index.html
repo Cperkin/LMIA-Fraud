@@ -2,63 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>2025 Q2 LMIA Applications</title>
+  <title>Live LMIA Job Listings</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
     table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     th { background-color: #f2f2f2; }
-    .scrollable-table {
-      max-height: 600px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-    }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <h1>2025 Q2 LMIA Applications (Sample)</h1>
-  <p>This table displays the first 500 rows of the <strong>tfwp_2025q2_pos_en.csv</strong> dataset.</p>
+  <h1>Live LMIA-Requested Jobs from Canada Job Bank</h1>
+  <table id="jobTable">
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Employer</th>
+        <th>Location</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Jobs will be inserted here -->
+    </tbody>
+  </table>
 
-  <div class="scrollable-table">
-    <!-- Paste your HTML table here -->
-    <!-- Example placeholder -->
-    <table>
-      <thead>
-        <tr>
-          <th>Employer Name</th>
-          <th>City</th>
-          <th>Province</th>
-          <th>NAICS</th>
-          <th>NOC</th>
-          <th>Job Title</th>
-          <th>Positions</th>
-          <th>LMIA Approval Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>ABC Construction Ltd.</td>
-          <td>Vancouver</td>
-          <td>BC</td>
-          <td>238910</td>
-          <td>7611</td>
-          <td>Construction Labourer</td>
-          <td>3</td>
-          <td>2025-06-15</td>
-        </tr>
-        <tr>
-          <td>XYZ Hospitality Inc.</td>
-          <td>Kelowna</td>
-          <td>BC</td>
-          <td>722511</td>
-          <td>6322</td>
-          <td>Cook</td>
-          <td>2</td>
-          <td>2025-06-10</td>
-        </tr>
-        <!-- Add more rows here -->
-      </tbody>
-    </table>
-  </div>
+  <script>
+    async function fetchLMIAJobs() {
+      try {
+        const response = await fetch("https://api.canadajobbank.org/api/jobs/category/lmia-jobs");
+        const jobs = await response.json();
+
+        const tbody = document.querySelector("#jobTable tbody");
+        tbody.innerHTML = "";
+
+        jobs.slice(0, 20).forEach(job => {
+          const title = job.title || "Unknown";
+          const employer = job.hiringOrganization?.name || "Unknown";
+          const location = job.jobLocation?.addressLocality + ", " + job.jobLocation?.addressRegion || "Unknown";
+          const slug = job.slug || "";
+          const link = `https://www.jobbank.gc.ca/jobsearch/jobposting/${slug}`;
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${title}</td>
+            <td>${employer}</td>
+            <td>${location}</td>
+            <td>${link}View Posting</a></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Failed to fetch LMIA jobs:", error);
+        document.querySelector("#jobTable tbody").innerHTML = "<tr><td colspan='4'>Unable to load job listings.</td></tr>";
+      }
+    }
+
+    fetchLMIAJobs();
+  </script>
 </body>
 </html>
