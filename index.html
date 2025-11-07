@@ -19,60 +19,61 @@
 <select id="datasetSelector">
   <option value="">Select a dataset</option>
   <option value="https://raw.githubusercontent.com/cperkin/LMIA-Fraud/main/tfwp_2025q2_pos_en.csv">
-    LMIA Dataset from GitHub
+    2025 Q2 LMIA Dataset
   </option>
 </select>
 
-  <div id="tableContainer"></div>
+<div id="tableContainer"></div>
 
-  <script>
-    document.getElementById('datasetSelector').addEventListener('change', function () {
-      const url = this.value;
-      if (!url.endsWith('.csv')) {
-        alert('Only CSV datasets can be previewed here. XLSX must be downloaded manually.');
-        return;
-      }
+https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js</script>
+<script>
+  document.getElementById('datasetSelector').addEventListener('change', function () {
+    const url = this.value;
+    if (!url) return;
 
-      fetch(url)
-        .then(response => response.text())
-        .then(csv => {
-          const parsed = Papa.parse(csv, { header: true });
-          const data = parsed.data;
-          const table = document.createElement('table');
-          const thead = document.createElement('thead');
-          const tbody = document.createElement('tbody');
+    fetch(url)
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.text();
+      })
+      .then(csv => {
+        const parsed = Papa.parse(csv, { header: true });
+        const data = parsed.data;
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
 
-          // Create header row
-          const headerRow = document.createElement('tr');
-          Object.keys(data[0]).forEach(key => {
-            const th = document.createElement('th');
-            th.textContent = key;
-            headerRow.appendChild(th);
-          });
-          thead.appendChild(headerRow);
-
-          // Create data rows
-          data.forEach(row => {
-            const tr = document.createElement('tr');
-            Object.values(row).forEach(value => {
-              const td = document.createElement('td');
-              td.textContent = value;
-              tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-          });
-
-          table.appendChild(thead);
-          table.appendChild(tbody);
-          const container = document.getElementById('tableContainer');
-          container.innerHTML = '';
-          container.appendChild(table);
-        })
-        .catch(err => {
-          console.error('Error loading CSV:', err);
-          alert('Failed to load dataset.');
+        // Create header row
+        const headerRow = document.createElement('tr');
+        Object.keys(data[0]).forEach(key => {
+          const th = document.createElement('th');
+          th.textContent = key;
+          headerRow.appendChild(th);
         });
-    });
-  </script>
+        thead.appendChild(headerRow);
+
+        // Create data rows
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          Object.values(row).forEach(value => {
+            const td = document.createElement('td');
+            td.textContent = value;
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        const container = document.getElementById('tableContainer');
+        container.innerHTML = '';
+        container.appendChild(table);
+      })
+      .catch(err => {
+        console.error('Error loading CSV:', err);
+        alert('Failed to load dataset. Please check the file URL and format.');
+      });
+  });
+</script>
 </body>
 </html>
